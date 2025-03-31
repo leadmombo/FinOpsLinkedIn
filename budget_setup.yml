@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ZeroSpendBudget:
+    Type: 'AWS::Budgets::Budget'
+    Properties:
+      Budget:
+        BudgetName: "Zero-Spend-Budget"
+        BudgetType: "COST"
+        TimeUnit: "MONTHLY"
+        BudgetLimit:
+          Amount: 0.01
+          Unit: "USD"
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: "ACTUAL"
+            ComparisonOperator: "GREATER_THAN"
+            Threshold: 0.01
+          Subscribers:
+            - SubscriptionType: "EMAIL"
+              Address: "your-email@example.com"
+
+  EC2MonthlyBudget:
+    Type: 'AWS::Budgets::Budget'
+    Properties:
+      Budget:
+        BudgetName: "EC2-Monthly-Budget"
+        BudgetType: "COST"
+        TimeUnit: "MONTHLY"
+        BudgetLimit:
+          Amount: 10
+          Unit: "USD"
+        CostFilters:
+          Service:
+            - "Amazon Elastic Compute Cloud - Compute"  # Filters for EC2
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: "ACTUAL"
+            ComparisonOperator: "GREATER_THAN"
+            Threshold: 90
+          Subscribers:
+            - SubscriptionType: "EMAIL"
+              Address: "your-email@example.com"
+
+  SavingsPlanUtilizationBudget:
+    Type: 'AWS::Budgets::Budget'
+    Properties:
+      Budget:
+        BudgetName: "Savings-Plan-Utilization"
+        BudgetType: "SAVINGS_PLANS_UTILIZATION"
+        TimeUnit: "MONTHLY"
+        BudgetLimit:
+          Amount: 100  # AWS requires this to be 100
+          Unit: "PERCENTAGE"
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: "ACTUAL"
+            ComparisonOperator: "LESS_THAN"
+            Threshold: 80  # Alert if utilization drops below 80%
+          Subscribers:
+            - SubscriptionType: "EMAIL"
+              Address: "your-email@example.com"
+
+  SavingsPlanCoverageBudget:
+    Type: 'AWS::Budgets::Budget'
+    Properties:
+      Budget:
+        BudgetName: "Savings-Plan-Coverage"
+        BudgetType: "SAVINGS_PLANS_COVERAGE"
+        TimeUnit: "MONTHLY"
+        BudgetLimit:
+          Amount: 100  # AWS requires this to be 100
+          Unit: "PERCENTAGE"
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: "ACTUAL"
+            ComparisonOperator: "LESS_THAN"
+            Threshold: 80  # Alert if coverage drops below 80%
+          Subscribers:
+            - SubscriptionType: "EMAIL"
+              Address: "your-email@example.com"
+
+  SpecificServiceBudget:
+    Type: 'AWS::Budgets::Budget'
+    Properties:
+      Budget:
+        BudgetName: "Specific-Service-Budget"
+        BudgetType: "COST"
+        TimeUnit: "MONTHLY"
+        BudgetLimit:
+          Amount: 5  # Adjust limit as needed
+          Unit: "USD"
+        CostFilters:
+          Service:
+            - "Amazon Relational Database Service"  # Change service as needed
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: "ACTUAL"
+            ComparisonOperator: "GREATER_THAN"
+            Threshold: 100  # Notify at 100% of budget
+          Subscribers:
+            - SubscriptionType: "EMAIL"
+              Address: "your-email@example.com"
